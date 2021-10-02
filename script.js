@@ -8,8 +8,10 @@ let currentTemp = document.getElementById('currentTempp');
 let currentWind = document.getElementById('currentWind');
 let currentHumidity = document.getElementById('currentHumidity');
 let currentUv = document.getElementById('currentUv');
+let forecast = document.getElementById('forecast')
+let fiveForecast = document.getElementById('fiveForecast')
 let apiKey = ('36e5780c07d0bb1a99f5324b1427e1e3');
-userCities = [];
+userCities = JSON.parse(localStorage.getItem('userCities')) || [];
 
 // after the city is input, it must be saved on page
 
@@ -25,40 +27,37 @@ userCities = [];
 
 
 // get cities from local storage
-function loadCities() {
-    let cityStr = localStorage.getItem('cities');
-    if (cityStr !== null) {
-        userCities = JSON.parse(cityStr)
-    }
-    // for each saved city build a div on page
-    for (let i = 0; i < userCities.length; i++) {
-        $('#cities').append(buildCityDiv(userCities[i]))
-    }
-};
-
-// bulding the div for saved cities
-function buildCityDiv(cityInput) {
-    let newDiv = $('<div>')
-    newDiv.text(cityInput)
-    newDiv.attr('class', 'city-div')
-    newDiv.attr('id', cityInput)
-    return newDiv
-};
 
 
 
-
-let getCurrentWeather = function () {
-    let cityInput = document.getElementById('cityInput');
+function getCurrentWeather(cityName) {
+    let cityInput = cityName;
     let apiUrl = ('https://api.openweathermap.org/data/2.5/weather?q='
-        + cityInput.value + '&units=imperial&appid=' + apiKey);
-    
+        + cityName + '&units=imperial&appid=' + apiKey);
+
     fetch(apiUrl).then(function (response) {
-        console.log('Response pre Json', response);
-        
-       response.json().then(function (data) {
-            if(response.status === 200) {
-                storeCities(cityInput.value, JSON.stringify(data));
+        response.json().then(function (data) {
+            console.log('Response pre Json', data);
+            if (response.status === 200) {
+
+                // 5 day forecast
+                fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&units=imperial&appid=${apiKey}`).then((x) => {
+                    return x.json();
+                }).then((response) => {
+                    console.log('five day response data', response);
+                    displayFiveDayData(data, 'testOne', 'testTwo');
+                })
+
+                // UV index forecast
+                fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${data.coord.lat}&lon=${data.coord.lon}&exclude=hourly,daily&appid=${apiKey}`)
+                    .then(function (response) {
+                        return response.json()
+                    })
+                    .then(function (uvData) {
+                        console.log(uvData)
+                        displayCurrentData(data, uvData);
+                        storeCities(cityInput.value, data);
+                    })
             } else {
                 alert('This is not a City')
             }
@@ -67,20 +66,81 @@ let getCurrentWeather = function () {
 };
 
 
-// function displayCurrentData(data) {
-//     const { name } = data;
-//     const { icon, description } = data.weather;
-//     const { temp, humidity } = data.main;
-//     const { speed } = data.wind;
-//     console.log(name, icon, temp, humidity, description, speed)
-// }
+function displaySavedCities() {
+    for (i = 0; i < userCities.length; i++) {
+        savedCity.innerHTML = savedCity.innerHTML + ` <li class="list-group-item"> <button  class="btn btn-secondary w-100 cities"> ${userCities[i]} </button> </li> `
+    }
+    let cities = document.querySelectorAll('.cities')
+
+    for (i = 0; i < cities.length; i++) {
+        cities[i].addEventListener('click', function () {
+            console.log(this.textContent)
+            getCurrentWeather(this.textContent);
+        })
+    }
+};
+displaySavedCities();
+
+
+function displayCurrentData(data, uvData) {
+    const { name, dt } = data;
+    const { temp, humidity } = data.main;
+    const { speed } = data.wind;
+    const { icon } = data.weather[0];
+    const { uvi } = uvData.current
+    var iconurl = "http://openweathermap.org/img/w/" + icon + ".png";
+
+    forecast.innerHTML = `
+    <h4 id="currentName">${name}  (${moment(dt, "X").format("MM/DD/YYYY")}) <img src="${iconurl}" alt="" id="currentDesc" /></h4>
+    <div id="currentTemp">Temperature: ${temp}°F</div>
+    <div id="currentWind">Wind: ${speed} mph</div>
+    <div id="currentHumidity">Humidity: ${humidity}</div>
+    <div id="currentUv">UV: ${uvi}</div>`
+};
+
+
+
+function displayFiveDayData(data) {
+    const { dt } = data.list;
+    const { icon } = data.list.weather[0];
+    const { temp, humidity } = data.list.main;
+    const { speed } = data.list.wind;
+    var iconurl = "http://openweathermap.org/img/w/" + icon + ".png";
+   
+    fiveForecast.innerHTML = `
+    <div class="m-5 row justify-content-around">
+        <div class="col-12 col-md-6 col-xl-3 mb-3">
+            <div class="card">
+                <ul id="list-toDo" class="list-group list-group-flush">
+                    <div id="futureDate-0">${moment(dt, "X").format("MM/DD/YYYY")}</div>
+                    <img src="${iconurl}" alt="" id="futureDesc-0" />
+                    <div id="futureTemp-0">${temp}°F</div>
+                    <div id="futureWind-0">${speed} mph</div>
+                    <div id="futureHumidity-0">${humidity}</div>
+                </ul>
+            </div>
+        </div>    
+    </div>`
+};
+
+
+
+
 
 // save searched city in local storage 
 function storeCities(city, cityData) {
-    localStorage.setItem(city, cityData);
+    if (userCities.includes(cityData.name)) { // if value already exists - don't push to array
+        console.log('ALREADY EXISTS DONT PUSH ME')
+    } else { // else if- value does not exist- push to array
+        userCities.push(cityData.name);
+        localStorage.setItem('userCities', JSON.stringify(userCities));
+    }
 };
 
 
 
 // event listeners
-searchBtn.addEventListener('click', getCurrentWeather);
+searchBtn.addEventListener('click', function () {
+    let cityInput = document.getElementById('cityInput')
+    getCurrentWeather(cityInput.value);
+});

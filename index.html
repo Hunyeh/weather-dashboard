@@ -27,20 +27,16 @@
 
                 <!-- where the "searched city" will be added -->
                 <h4 class="text-center">Saved Cities</h4>
-                <div id="savedCity"></div>
+                <ul class="list-group" id="savedCity">
+
+                </ul>
             </div>
 
             <!-- todays weather forecast section -->
             <div class="col-12 col-md-9" id="todaysForecast">
                 <div class="row" id="currentDay">
                     <div id="forecast">
-                        <h4 id="currentName">City:</h4>
-                        <img src="" alt="" id="currentDesc" />
-                        <div id="currentDate">Date:</div>
-                        <div id="currentTemp">Temp:</div>
-                        <div id="currentWind">Wind:</div>
-                        <div id="currentHumidity">Humidity:</div>
-                        <div id="currentUv">UV:</div>
+
                     </div>
                 </div>
 
@@ -48,63 +44,9 @@
                 <div class="m-5 row justify-content-around" id="futureDay">
                     <h3 class="text-center">5-day Forecast</h3>
                 </div>
-                <div class="m-5 row justify-content-around">
-                    <div class="col-12 col-md-6 col-xl-3 mb-3">
-                        <div class="card">
-                            <ul id="list-toDo" class="list-group list-group-flush">
-                                <div id="futureDate-0"></div>
-                                <img src="" alt="rth" id="futureDesc-0" />
-                                <div id="futureTemp-0">srth</div>
-                                <div id="futureWind-0">srth</div>
-                                <div id="futureHumidity-0">srth</div>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-xl-3 mb-3">
-                        <div class="card">
-                            <ul id="list-toDo" class="list-group list-group-flush">
-                                <div id="futuretDate-1"></div>
-                                <img src="" alt="" id="futureDesc-1" />
-                                <div id="futureTemp-1"></div>
-                                <div id="futureWind-1"></div>
-                                <div id="futureHumidity-1"></div>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-xl-3 mb-3">
-                        <div class="card">
-                            <ul id="list-toDo" class="list-group list-group-flush">
-                                <div id="futureDate-2"></div>
-                                <img src="" alt="" id="futureDesc-2" />
-                                <div id="futureTemp-2"></div>
-                                <div id="futureWind-2"></div>
-                                <div id="futureHumidity-2"></div>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-xl-3 mb-3">
-                        <div class="card">
-                            <ul id="list-toDo" class="list-group list-group-flush">
-                                <div id="futureDate-3"></div>
-                                <img src="" alt="" id="futureDesc-3" />
-                                <div id="futureTemp-3"></div>
-                                <div id="futureWind-3"></div>
-                                <div id="futureHumidity-3"></div>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-xl-3 mb-3">
-                        <div class="card">
-                            <ul id="list-toDo" class="list-group list-group-flush">
-                                <div id="futureDate-4"></div>
-                                <img src="" alt="" id="futureDesc-4" />
-                                <div id="futureTemp-4"></div>
-                                <div id="futureWind-4"></div>
-                                <div id="futureHumidity-4"></div>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                
+                <div id="fiveForecast"></div>
+
             </div>
         </div>
     </div>
@@ -117,5 +59,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="./script.js"></script>
 </body>
-
 </html>
