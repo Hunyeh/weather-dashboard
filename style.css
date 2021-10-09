@@ -1,13 +1,36 @@
-#currentDay, #futureDay {
+/* #currentDay, #futureDay {
     margin: 10px;
-}
+} */
 
 ul.list-group {
     min-height: 130px;
 
   }
 
+  body {
+      background-color: rgb(245, 245, 245);
+  }
 
 h1 {
     background-color: blue;
+}
+
+.red {
+    background-color: red;
+    color: rgb(245, 245, 245);
+}
+
+.orange {
+    background-color: orange;
+    color: white;
+}
+
+.green {
+    background-color: green;
+    color: white;
+}
+
+hr {
+    font-weight: bold;
+    background-color: black;
 }
